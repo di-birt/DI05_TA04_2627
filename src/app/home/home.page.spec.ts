@@ -25,6 +25,67 @@ describe('HomePage', () => {
     expect(component).toBeTruthy();
   });
 
+  // Estas pruebas consultan el DOM generado por la plantilla, no solo la clase TypeScript.
+  describe('HTML renderizado', () => {
+    it('muestra el título de la tarjeta', () => {
+      // nativeElement representa el elemento raíz renderizado por Angular.
+      // querySelector busca el primer elemento que coincide con el selector CSS.
+      const titulo = fixture.nativeElement.querySelector('ion-card-title');
+
+      // Primero comprobamos que el elemento existe para que el fallo sea claro.
+      expect(titulo).not.toBeNull();
+      // textContent contiene el texto visible del elemento y sus descendientes.
+      expect(titulo.textContent).toContain('Comprobar mayoría de edad');
+    });
+
+    it('renderiza una tarjeta y un botón', () => {
+      // querySelectorAll devuelve todos los elementos que coinciden con el selector.
+      const tarjetas = fixture.nativeElement.querySelectorAll('ion-card');
+      // En Ionic comprobamos el componente ion-button, que es el elemento de la plantilla.
+      const boton = fixture.nativeElement.querySelector('ion-button');
+
+      // La plantilla debe contener una única tarjeta.
+      expect(tarjetas.length).toBe(1);
+      // El botón debe existir y mostrar el texto que identifica su acción.
+      expect(boton).not.toBeNull();
+      expect(boton.textContent).toContain('Ejecutar comprobación');
+    });
+
+    it('no muestra el resultado antes de ejecutar la comprobación', () => {
+      // @if no renderiza .result mientras resultado todavía sea una cadena vacía.
+      expect(fixture.nativeElement.querySelector('.result')).toBeNull();
+    });
+
+    it('muestra el resultado de mayoría de edad y su atributo accesible', () => {
+      // Modificamos el estado y ejecutamos la acción que usaría la plantilla.
+      component.anyoNacimiento = 2000;
+      component.comprobarEdad();
+      // Sin detectChanges, el HTML todavía no reflejaría el nuevo resultado.
+      fixture.detectChanges();
+
+      const resultado = fixture.nativeElement.querySelector('.result');
+
+      expect(resultado).not.toBeNull();
+      // Comprobamos el texto que verá el usuario.
+      expect(resultado.textContent).toContain('es mayor de edad.');
+      // getAttribute permite verificar atributos HTML y requisitos de accesibilidad.
+      expect(resultado.getAttribute('aria-live')).toBe('polite');
+    });
+
+    it('muestra el resultado de minoría de edad', () => {
+      // Usamos una fecha relativa para que la prueba siga siendo válida cada año.
+      component.anyoNacimiento = new Date().getFullYear() - 16;
+      component.comprobarEdad();
+      fixture.detectChanges();
+
+      const resultado = fixture.nativeElement.querySelector('.result');
+
+      expect(resultado).not.toBeNull();
+      // El mismo elemento debe mostrar el mensaje alternativo para una persona menor.
+      expect(resultado.textContent).toContain('es menor de edad.');
+    });
+  });
+
   describe('Comprobar si es mayor de edad -> mayorDeEdad', () => {
     it('rechaza edades menores de 18', () => {
       // En la aplicacion, este metodo se alcanzaria desde comprobarEdad().
