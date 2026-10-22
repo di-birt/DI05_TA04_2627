@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>TA02 · Spy y mocks</ion-title>
+    <ion-title>TA05 · Promesas y timers</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -10,8 +10,8 @@
       <p class="eyebrow">Pruebas unitarias con Vitest</p>
       <h1>Observa cómo colaboran los objetos.</h1>
       <p class="lead">
-        Esta demo calcula una edad para mostrar dónde encaja un <strong>spy</strong>
-        y cómo un <strong>mock</strong> sustituye una dependencia.
+        Esta demo calcula una edad de forma asíncrona y muestra cómo controlar
+        un mensaje temporal con timers falsos.
       </p>
     </section>
 
@@ -31,11 +31,20 @@
               [(ngModel)]="anyoNacimiento"
             ></ion-input>
           </ion-item>
-          <ion-button expand="block" (click)="comprobarEdad()">
+          <ion-button expand="block" (click)="comprobarEdadAsync()" [disabled]="cargando">
             Ejecutar comprobación
           </ion-button>
+          @if (cargando) {
+            <p class="loading" aria-live="polite">Calculando edad...</p>
+          }
           @if (resultado) {
             <p class="result" aria-live="polite">{{ resultado }}</p>
+            <p class="timer" aria-live="polite">
+              Este aviso desaparecerá en {{ segundosRestantes }} segundos.
+            </p>
+          }
+          @if (error) {
+            <p class="error" aria-live="assertive">{{ error }}</p>
           }
         </ion-card-content>
       </ion-card>
@@ -46,10 +55,10 @@
           <div>
             <h2>Espía una llamada real</h2>
             <p>
-              Observa si <code>calcularEdad()</code> y
-              <code>mayorDeEdad()</code> se invocan, sin reemplazar su lógica.
+              Espera el resultado de <code>cargarEdad()</code> antes de
+              comprobar la respuesta.
             </p>
-            <ion-note>vi.spyOn(component, 'calcularEdad')</ion-note>
+            <ion-note>await servicio.cargarEdad()</ion-note>
           </div>
         </article>
         <article class="concept mock-concept">
@@ -57,10 +66,21 @@
           <div>
             <h2>Reemplaza una dependencia</h2>
             <p>
-              Entrega un <code>EdadService</code> falso para controlar sus
-              respuestas y aislar el componente.
+              Entrega un <code>EdadService</code> falso para resolver o
+              rechazar la promesa sin peticiones reales.
             </p>
-            <ion-note>useValue: edadServiceMock</ion-note>
+            <ion-note>mockResolvedValue / mockRejectedValue</ion-note>
+          </div>
+        </article>
+        <article class="concept timer-concept">
+          <span class="concept-number">TIMER</span>
+          <div>
+            <h2>Controla el paso del tiempo</h2>
+            <p>
+              El resultado desaparece después de 4000 ms y el test avanza el
+              reloj sin esperar tiempo real.
+            </p>
+            <ion-note>vi.advanceTimersByTime(4000)</ion-note>
           </div>
         </article>
       </div>

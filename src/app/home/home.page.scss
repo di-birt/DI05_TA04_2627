@@ -87,6 +87,30 @@ h1 {
   line-height: 1.5;
 }
 
+.timer {
+  margin: 8px 0 0;
+  color: #9a650d;
+  font-size: 13px;
+  text-align: right;
+}
+
+.loading,
+.error {
+  margin: 20px 0 0;
+  padding: 14px;
+  line-height: 1.5;
+}
+
+.loading {
+  background: #eef5ff;
+  color: #24466f;
+}
+
+.error {
+  background: #fff0f0;
+  color: #8a2525;
+}
+
 .concept-stack {
   display: grid;
   gap: 16px;
@@ -110,6 +134,11 @@ h1 {
 .mock-concept {
   background: #fff1e5;
   animation-delay: 260ms;
+}
+
+.timer-concept {
+  background: #f2edff;
+  animation-delay: 340ms;
 }
 
 .concept-number {
