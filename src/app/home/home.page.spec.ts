@@ -184,90 +184,115 @@ describe('HomePage con un mock de EdadService', () => {
 
 describe('Promesas y timers controlados', () => {
   it('resuelve la edad con una promesa', async () => {
-    vi.useFakeTimers();
-    const servicio = new EdadService();
-    const anyoNacimiento = new Date().getFullYear() - 25;
-    const promesa = servicio.cargarEdad(anyoNacimiento);
+    // TODO - Vamos a hacer uso de un Timer falso
 
-    // Avanzamos el reloj simulado en lugar de esperar un segundo real.
-    vi.advanceTimersByTime(1000);
-    // await hace que Vitest espere el resultado antes de cerrar el test.
-    await expect(promesa).resolves.toBe(25);
-    vi.useRealTimers();
+    // TODO - Hacemos uso del servicio EdadService
+
+    // Creamos la variable anyoNacimiento
+    const anyoNacimiento = new Date().getFullYear() - 25;
+
+    // TODO - Creamos una variable para recibir la promesa que devuelve cargarEdad
+
+    // TODO - Avanzamos el reloj simulado en lugar de esperar un segundo real.
+
+    /* TODO - await hace que Vitest espere el resultado antes de cerrar el test.
+     Espera que la promesa se resuelva y su valor sea 25*/
+
+    // TODO - Restaurar el reloj real
+
   });
 
   it('muestra el resultado cuando la promesa se resuelve', async () => {
-    const edadServiceMock = {
-      cargarEdad: vi.fn().mockResolvedValue(20),
-      esMayorDeEdad: vi.fn().mockReturnValue(true),
-    };
+    /* TODO - Creamos un mock para edadService
+     * cargarEdad devolverá siempre 20
+     * esMayorDeEdad devolverá siempre true
+     */
 
+    // TODO - Añadir los providers necesarios
     TestBed.configureTestingModule({
       imports: [HomePage],
-      providers: [{ provide: EdadService, useValue: edadServiceMock }],
+      providers: [],
     });
 
     const fixture = TestBed.createComponent(HomePage);
     const component = fixture.componentInstance;
     component.anyoNacimiento = 2004;
 
-    // La promesa se resuelve sin esperar tiempo real.
-    await component.comprobarEdadAsync();
+    /* TODO - La promesa se resuelve sin esperar tiempo real.
+     * Llamar al método comprobarEdadAsync, tener en cuenta la asincronía
+     */
 
-    expect(component.resultado).toContain('es mayor de edad.');
-    expect(edadServiceMock.cargarEdad).toHaveBeenCalledWith(2004);
-    expect(component.cargando).toBe(false);
+    // TODO - resultado contendrá "es mayor de edad"
+
+    // TODO - Comprobaremos que cargarEdad se puede llamar con un parámetro 2004
+    
+    // TODO - cargando será false
+
   });
 
   it('muestra un error cuando la promesa se rechaza', async () => {
-    const edadServiceMock = {
-      cargarEdad: vi.fn().mockRejectedValue(new Error('Fallo de red')),
-      esMayorDeEdad: vi.fn(),
-    };
+    /* TODO - Crear un Mock para EdadSErvice
+     * cargarEdad controlaremos si la llamada asincrona ha fallado. Crearemos un nuevo Error con el texto "Fallo de red".
+     * esMayorDeEdad la podriamos dejar como vi.fn() o no ponerla, ya que el test debería de fallar antes de ejecutarse.
+     */    
 
+    // TODO - Añadir los providers necesarios
     TestBed.configureTestingModule({
       imports: [HomePage],
-      providers: [{ provide: EdadService, useValue: edadServiceMock }],
+      providers: [],
     });
 
     const fixture = TestBed.createComponent(HomePage);
     const component = fixture.componentInstance;
 
-    // rejects se representa en la implementación como un mensaje visible.
-    await component.comprobarEdadAsync();
+    /* TODO - rejects se representa en la implementación como un mensaje visible.
+     * Llamar al método comprobarEdadAsync, tener en cuenta la asincronía
+     */
 
-    expect(component.error).toBe('No se ha podido calcular la edad.');
-    expect(component.resultado).toBe('');
-    expect(component.cargando).toBe(false);
+    // TODO - error será "No se ha podido calcular la edad."
+    
+    // TODO - resultado será ""
+
+    // TODO - cargando será false
+
   });
 
   describe('Aviso temporal', () => {
     afterEach(() => {
-      // Ningún test debe dejar el reloj falso activo para el siguiente.
-      vi.useRealTimers();
+      // TODO - Ningún test debe dejar el reloj falso activo para el siguiente.
+
     });
 
     it('conserva el mensaje justo antes de 4000 ms', () => {
-      vi.useFakeTimers();
-      const component = TestBed.createComponent(HomePage).componentInstance;
+      // TODO - Hacer uso de un Timer falso
+      
+      // TODO - Crear un component para HomePage
+      
+      // TODO - Llamar a mostrarAvisoTemporal con un mensaje "Mensaje de prueba"
+      
+      // TODO - segundosRestantes serán 4
+      
+      // TODO - comprobar el comportamiento justo antes de que transcurran los 4000ms, justo en 3999 
 
-      component.mostrarAvisoTemporal('Mensaje de prueba');
-      expect(component.segundosRestantes).toBe(4);
-      vi.advanceTimersByTime(3999);
+      // TODO - resutaldo será el mismo mensaje que hemos puesto antes "Mensaje de prueba"
+      
+      // TODO - segundosRestantes será 1
 
-      expect(component.resultado).toBe('Mensaje de prueba');
-      expect(component.segundosRestantes).toBe(1);
     });
 
     it('elimina el mensaje exactamente a los 4000 ms', () => {
-      vi.useFakeTimers();
-      const component = TestBed.createComponent(HomePage).componentInstance;
+      // TODO - Hacer uso de un Timer falso
+      
+      // TODO - Crear un component de HomePage
 
-      component.mostrarAvisoTemporal('Mensaje de prueba');
-      vi.advanceTimersByTime(4000);
+      // TODO - Llamar a mostrarAvisoTemporal con un mensaje "Mensaje de prueba"
 
-      expect(component.resultado).toBe('');
-      expect(component.segundosRestantes).toBe(0);
+      // TODO - comprobar el comportamiento justo en 4000ms
+
+      // TODO - resultado será ""
+      
+      // segundosRestantes será 0
+
     });
   });
 });
